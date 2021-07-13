@@ -15,7 +15,7 @@
 #include <ELMduino.h>
 #include <SPI.h>
 #include <avr/pgmspace.h>
-#include <Bluetooth_HC05s.h>
+#include <Bluetooth_HC05.h>
 #include <EEPROM.h>
 
 #define DEFAULT_PIN "1234"
