@@ -12,4 +12,4 @@ For building needed:
 * Installed U8g2
 * Installed GFX_Library_for_Arduino
 
-Description of work https://putey.net
+Description of work https://putey.net/post/vizualizaciya-dannykh-schityvaemykh-s-elm327-adaptera-cherez-bluetooth-na-arduino
