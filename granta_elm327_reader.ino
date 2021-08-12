@@ -17,6 +17,7 @@
 #include <avr/pgmspace.h>
 #include <Bluetooth_HC05.h>
 #include <EEPROM.h>
+#include <avr/wdt.h>
 
 #define DEFAULT_PIN "1234"
 #define STORAGE_ADDR 0
@@ -59,8 +60,6 @@ typedef struct obdnames__d__ {
   char *name3;
 } obdnames__d;
 
-//#define MAX_CACHE 128
-//int8_t cachePIDs[MAX_CACHE];
 char programStrings[30];
 
 uint8_t isConnected = 0;
@@ -186,20 +185,6 @@ void setState(uint8_t data){
   restoreState();
 }
 
-/*void clearCache(){
-  uint8_t ind = 0;
-  while(ind<MAX_CACHE){
-    cachePIDs[ind]=-1;
-    ind++;
-  }
-}
-
-void setCache(int8_t data, uint8_t pid){
-  if (pid < MAX_CACHE){
-    if (cachePIDs[pid]!=-1) cachePIDs[pid]=data;
-  }
-}*/
-
 uint8_t setupLight = 1;
 
 uint16_t getBaud(){
@@ -243,7 +228,6 @@ void setCurrentScreen(){
 }
 
 void setup(void) {
-  //Serial.begin(9600);
   pinMode(RESET_MAC, INPUT);
   pinMode(LIGHT_PIN, OUTPUT);
   if (digitalRead(RESET_MAC) == LOW){
@@ -276,7 +260,6 @@ void setup(void) {
   }
   u8g2.begin();
   delay(500);
-  //clearCache();
   pinMode(SENSOR_PIN, INPUT);
   EEPROM.get(STORAGE_ADDR, device);
   if ((device.addr[0]==255) &&
@@ -295,39 +278,12 @@ void setup(void) {
     BTS.begin(bd);
     hc05.begin(bd, RESET_H05, COMM_HC05, HC05_MODE_DATA);
     delay(1000);
+    wdt_enable(WDTO_8S);
   }
 }
 
-/*uint8_t isPIDSupported(uint8_t pidType){
-  if (pidType < MAX_CACHE){
-    if (cachePIDs[pidType]!=-1) {
-      return cachePIDs[pidType];
-    }
-  }
-  if (pidType>SUPPORTED_PIDS_1_20 && pidType < SUPPORTED_PIDS_21_40){
-    retData.u2 = intELM327.supportedPIDs_1_20();d
-    return (retData.u2 & (((uint32_t)1)<<(pidType - SUPPORTED_PIDS_1_20)))?1:0;
-  } else if (pidType>SUPPORTED_PIDS_21_40 && pidType < SUPPORTED_PIDS_41_60){
-    retData.u2 = intELM327.supportedPIDs_21_40();
-    return (retData.u2 & (((uint32_t)1)<<(pidType - SUPPORTED_PIDS_21_40)))?1:0;
-  } else if (pidType>SUPPORTED_PIDS_41_60 && pidType < SUPPORTED_PIDS_61_80){
-    retData.u2 = intELM327.supportedPIDs_41_60();
-    return (retData.u2 & (((uint32_t)1)<<(pidType - SUPPORTED_PIDS_41_60)))?1:0;
-  } else if (pidType > SUPPORTED_PIDS_61_80){
-    retData.u2 = intELM327.supportedPIDs_61_80();
-    return (retData.u2 & (((uint32_t)1)<<(pidType - SUPPORTED_PIDS_61_80)))?1:0;
-  }
-  return 0;
-}*/
-
 void getAllDataFromOBD(uint8_t pidType){
   if (intELM327.status == ELM_SUCCESS || intELM327.status == ELM_NO_DATA){
-    /*if (!isPIDSupported(pidType)){
-      resDataStatus=1;
-      setCache(0, pidType);
-      return;
-    }
-    setCache(1, pidType);*/
     switch(pidType){
       case VEHICLE_SPEED:
         //int32_t
@@ -455,7 +411,6 @@ void printConnect(){
   u8g2.drawStr(messageToCenterX(15, 5),40,"Alexey Berezhok"); 
   u8g2.drawStr(messageToCenterX(8, 5),50,"(c) 2021");
   DRAW_END
-  //clearCache();
   if (!intELM327.begin(BTS, debg))
   {
     if (!isConnected) {
@@ -706,7 +661,7 @@ uint8_t PrntMACSCR(BluetoothAddress &address, uint8_t ind, uint8_t from){
     delay(5000);
     if (hc05.initSerialPortProfile()==false){
         printATError();
-        return;
+        return 255;
     }
     hc05.pair(address, 30000);
     delay(5000);
@@ -737,6 +692,7 @@ void printATError(){
 
 void printSelectDevice(){
     uint8_t res = 0;
+    wdt_disable();
     if (!startScan){
       DRAW_BEGIN
       u8g2.setFont(u8g2_font_5x7_t_cyrillic);
@@ -746,24 +702,29 @@ void printSelectDevice(){
       delay(1500);
       if (hc05.initSerialPortProfile()==false){
         printATError();
+        wdt_enable(WDTO_8S);
         return;
       }
       if (hc05.restoreDefaults(10000)==false){
         printATError();
+        wdt_enable(WDTO_8S);
         return;
       }
       if (hc05.setRole(HC05_ROLE_MASTER)==false){
         printATError();
+        wdt_enable(WDTO_8S);
         return;
       };
       hc05.softReset(10000);
       delay(1000);
       if (hc05.initSerialPortProfile()==false){
         printATError();
+        wdt_enable(WDTO_8S);
         return;
       }
       if (hc05.deleteAllDevicesFromList()==false){
         printATError();
+        wdt_enable(WDTO_8S);
         return;
       }
       if (hc05.setConnectionMode(HC05_CONNECT_ANY, 10000)==false){
@@ -772,10 +733,12 @@ void printSelectDevice(){
       }
       if (hc05.setInquiryMode(HC05_INQUIRY_STANDARD, MAX_DEVICES, 20)==false){
         printATError();
+        wdt_enable(WDTO_8S);
         return;
       }
       if (hc05.setDeviceClass(0, 10000)==false){
         printATError();
+        wdt_enable(WDTO_8S);
         return;
       }
       startScan = 1;
@@ -800,9 +763,11 @@ void printSelectDevice(){
       }
     }
     delay(100);
+    wdt_enable(WDTO_8S);
 }
 
 void machineState(){
+  wdt_reset();
   switch (state){
     case 1: {
       printCanntConnect();

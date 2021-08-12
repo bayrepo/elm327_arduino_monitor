@@ -1,0 +1,110 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 2 2
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L obd2_lib:HC05 D?
+U 1 1 60FBBC4C
+P 7350 1950
+F 0 "D?" H 7528 1551 50  0000 L CNN
+F 1 "HC05" H 7528 1460 50  0000 L CNN
+F 2 "" H 7350 1950 50  0001 C CNN
+F 3 "" H 7350 1950 50  0001 C CNN
+	1    7350 1950
+	1    0    0    -1  
+$EndComp
+$Comp
+L obd2_lib:HC05 D?
+U 1 1 60FBC4DA
+P 5250 2850
+F 0 "D?" H 5117 1835 50  0000 C CNN
+F 1 "HC05" H 5117 1926 50  0000 C CNN
+F 2 "" H 5250 2850 50  0001 C CNN
+F 3 "" H 5250 2850 50  0001 C CNN
+	1    5250 2850
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	5650 2050 6950 2750
+Wire Wire Line
+	5650 2750 6950 2050
+Wire Wire Line
+	5650 2150 6950 2650
+Wire Wire Line
+	5650 2250 6950 2550
+Wire Wire Line
+	5650 2350 6950 2450
+Wire Wire Line
+	5650 2450 6950 2350
+Wire Wire Line
+	5650 2550 6950 2250
+Wire Wire Line
+	5650 2650 6950 2150
+$Comp
+L power:PWR_FLAG #FLG?
+U 1 1 60FBD271
+P 5850 1550
+F 0 "#FLG?" H 5850 1625 50  0001 C CNN
+F 1 "PWR_FLAG" H 5850 1723 50  0000 C CNN
+F 2 "" H 5850 1550 50  0001 C CNN
+F 3 "~" H 5850 1550 50  0001 C CNN
+	1    5850 1550
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 60FC207A
+P 6800 3150
+F 0 "#PWR?" H 6800 2900 50  0001 C CNN
+F 1 "GND" H 6805 2977 50  0000 C CNN
+F 2 "" H 6800 3150 50  0001 C CNN
+F 3 "" H 6800 3150 50  0001 C CNN
+	1    6800 3150
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 60FC24AC
+P 6850 1600
+F 0 "#PWR?" H 6850 1450 50  0001 C CNN
+F 1 "VCC" H 6865 1773 50  0000 C CNN
+F 2 "" H 6850 1600 50  0001 C CNN
+F 3 "" H 6850 1600 50  0001 C CNN
+	1    6850 1600
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:PWR_FLAG #FLG?
+U 1 1 60FC2A5C
+P 6300 2950
+F 0 "#FLG?" H 6300 3025 50  0001 C CNN
+F 1 "PWR_FLAG" H 6300 3123 50  0000 C CNN
+F 2 "" H 6300 2950 50  0001 C CNN
+F 3 "~" H 6300 2950 50  0001 C CNN
+	1    6300 2950
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6850 1600 5650 2250
+Connection ~ 5650 2250
+Wire Wire Line
+	5850 1550 6850 1600
+Connection ~ 6850 1600
+Wire Wire Line
+	6950 2450 6800 3150
+Connection ~ 6950 2450
+Wire Wire Line
+	6300 2950 6800 3150
+Connection ~ 6800 3150
+$EndSCHEMATC

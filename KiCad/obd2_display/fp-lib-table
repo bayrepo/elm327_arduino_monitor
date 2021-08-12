@@ -1,0 +1,3 @@
+(fp_lib_table
+  (lib (name obd2_display)(type KiCad)(uri ${KIPRJMOD}/obd2_display.pretty)(options "")(descr ""))
+)
