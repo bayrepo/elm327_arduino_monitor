@@ -283,7 +283,7 @@ void setup(void) {
 }
 
 void getAllDataFromOBD(uint8_t pidType){
-  if (intELM327.status == ELM_SUCCESS || intELM327.status == ELM_NO_DATA){
+  if (intELM327.get_response() == ELM_SUCCESS || intELM327.get_response() == ELM_NO_DATA){
     switch(pidType){
       case VEHICLE_SPEED:
         //int32_t
@@ -386,12 +386,12 @@ void getAllDataFromOBD(uint8_t pidType){
           return;
         }
     }
-    if (intELM327.status == ELM_NO_DATA) {
+    if (intELM327.get_response() == ELM_NO_DATA) {
       resDataStatus=2;
     } else {
       resDataStatus=0;
     }
-  } else if (intELM327.status == ELM_NO_DATA) {
+  } else if (intELM327.get_response() == ELM_NO_DATA) {
     resDataStatus=2;
   } else {
     setState(1);
@@ -644,7 +644,7 @@ uint8_t PrntMACSCR(BluetoothAddress &address, uint8_t ind, uint8_t from){
     delay(1000);
     if (hc05.initSerialPortProfile()==false){
         printATError();
-        return;
+        return 255;
     }
     if(hc05.setPassword(DEFAULT_PIN, 10000)==false){
         printATError();
